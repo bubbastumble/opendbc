@@ -22,6 +22,7 @@ static safety_config chrysler_cusw_init(uint16_t param) {
 }
 
 static void chrysler_cusw_rx_hook(const CANPacket_t *msg) {
+  controls_allowed = true;
   if (msg->bus == 0U) {
     if (msg->addr == 0x1ECU) {
       // Signal: EPS_STATUS.TORQUE_MOTOR
@@ -72,9 +73,9 @@ static bool chrysler_cusw_tx_hook(const CANPacket_t *msg) {
     // Signal: LKAS_COMMAND.LKAS_CONTROL_BIT
     const bool steer_req = GET_BIT(msg, 12U);
     if (steer_torque_cmd_checks(desired_torque, steer_req, CHRYSLER_CUSW_STEERING_LIMITS)) {
-      tx = false;
+      // tx = false;
       // FIXME: too many problems here right now, hotwire things while investigating
-      // tx = true;
+      tx = true;
     }
   }
 
